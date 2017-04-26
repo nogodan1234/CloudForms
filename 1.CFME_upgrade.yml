@@ -1,0 +1,23 @@
+ - hosts: worker
+   tasks:
+   - name: "Clean-up all repo"
+     shell: "subscription-manager unsubscribe --all"
+     shell: "subscription-manager unregister"
+     shell: "subscription-manager clean"
+     shell: " subscription-manager register --username='rhn-support-tachoi' --password='Redhat321!@#' "
+     shell: " subscription-manager attach --pool 8a85f9833e1404a9013e3cddf95a0599 "
+     shell: " subscription-manager repos --disable=* "
+
+   - name: "Enable CloudForms 4.2 Repo: {{ cfme_42_repo }}"
+     shell: "subscription-manager repos --enable={{ cfme_42_repo }}"
+
+   - name: "Enable Base Repos"
+     shell: "subscription-manager repos --enable={{ item }}"
+     with_items: "{{ cfme_base_repos }}"
+  
+   - name: Upgrade CloudForms RPMs
+     yum:
+      name=cfme
+      state=latest
+      update_cache=yes
+
