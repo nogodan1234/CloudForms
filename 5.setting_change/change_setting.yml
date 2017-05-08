@@ -1,0 +1,29 @@
+- hosts: all
+
+  tasks:
+  - name: "Stop {{ evm_service_name }}"
+    service:
+     name: "{{ evm_service_name }}"
+     state: stopped
+
+  - name: Clean current settings.yml
+    file:
+      state: absent
+      path: "{{ item }}"
+    with_items:
+       - /var/www/miq/vmdb/config/settings.yml
+
+  - name: "Copy new settings.yml file"
+    copy:   
+     src: ./templates/settings.yml.org
+     dest: "{{ item }}"
+     owner: root
+     group: root
+     mode: 0644
+    with_items: 
+       - /var/www/miq/vmdb/config/settings.yml
+     
+  - name: "Start {{ evm_service_name }}"
+    service:
+     name: "{{ evm_service_name }}"
+     state: started

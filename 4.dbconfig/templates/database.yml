@@ -1,0 +1,34 @@
+---
+base:
+  adapter: postgresql
+  encoding: utf8
+  username: root
+  pool: 5
+  wait_timeout: 5
+  min_messages: warning
+development:
+  adapter: postgresql
+  encoding: utf8
+  username: root
+  pool: 5
+  wait_timeout: 5
+  min_messages: notice
+  database: vmdb_development
+production:
+  adapter: postgresql
+  encoding: utf8
+  username: root
+  pool: 5
+  wait_timeout: 5
+  min_messages: warning
+  database: vmdb_production
+  host: 10.65.5.39
+  password: v2:{RS0w7btc8ozgUbHSZpV04g==}
+test:
+  adapter: postgresql
+  encoding: utf8
+  username: root
+  pool: 3
+  wait_timeout: 5
+  min_messages: warning
+  database: vmdb_test<%= ENV['TEST_ENV_NUMBER'] %>

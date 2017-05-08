@@ -1,0 +1,22 @@
+ - hosts: db-b
+   tasks:
+   - name: "create mount point"
+     shell: "mkdir -p /var/opt/rh/rh-postgresql95/lib/pgsql"
+     
+   - name: "Creating VG"
+     lvg:
+     vg: vg_pg
+     pvs: /dev/vdb
+     pesize: 32
+
+   - name: "Creating LV"
+     lvol:
+     vg: vg_pg
+     lv: lv_pg
+     size: 100%FREE
+    
+   - name: Mount Storage Devices
+     mount: src=/dev/mapper/{{ item }} name=/var/opt/rh/rh-postgresql95/lib/pgsql fstype=xfs opts="rw,noatime 0 0" state=mounted
+     with_items:
+     - vg_pg-lv_pg
+

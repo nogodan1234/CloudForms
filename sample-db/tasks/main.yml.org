@@ -1,0 +1,41 @@
+- name: "Migrate Database"
+  shell: "source {{ rails_env_file }} && bin/rake db:migrate"
+  args:
+    chdir: "{{ vmdb_dir }}"
+
+- name: "Create RubyRep Purge File: {{ rubyrep_trigger_file }}"
+  template:
+    src={{ rubyrep_trigger_template }}
+    dest={{ rubyrep_trigger_file }}
+    owner=root
+    group=root
+    mode=0644
+
+- name: "Purge RubyRep Triggers"
+  shell: "source {{ rails_env_file }} && bin/rails r {{ rubyrep_trigger_file }}"
+  args:
+    chdir: "{{ vmdb_dir }}"
+
+- name: "Update Automate Model"
+  shell: "source {{ rails_env_file }} && bin/rake evm:automate:reset"
+  args:
+    chdir: "{{ vmdb_dir }}"
+
+- name: "Run PostgreSQL_upgrade_script"
+  shell: "sh -x {{ PostgreSQL_upgrade_script }}"
+  args:
+    chdir: "{{ vmdb_dir }}"
+    
+- name: "Copy PostgreSQL config file "
+  copy: src={{ item.src }} dest={{ item.dest }}
+    owner=postgres
+    group=postgres
+    mode=0600
+  with_items:
+    - { src: 'postgresql.conf', dest: '/var/opt/rh/rh-postgresql95/lib/pgsql/data/postgresql.conf' }
+    
+- name: "Enable and start PostgreSQL"
+  shell: "systemctl enable rh-postgresql95-postgresql"
+  shell: "systemctl start rh-postgresql95-postgresql"
+  args:
+    chdir: "{{ vmdb_dir }}"

@@ -1,0 +1,28 @@
+ - hosts: test
+   tasks:
+   - name: "Clean PG_DATA directory,v2_key,database.yml"
+     file: path={{ APPLIANCE_PG_DATA }} state=absent
+     file: /var/www/miq/vmdb/certs/v2_key state=absent
+     file: /var/www/miq/vmdb/config/database.yml state=absent
+   - name: "Stop {{ evm_service_name }}"
+     service:
+     name={{ evm_service_name }}
+      state=stopped
+   - name: "Copy database.yml"
+     copy:
+      src: ./templates/database.yml
+      dest: /var/www/miq/vmdb/config/
+      owner: root
+      group: root
+      mode: 0644
+   - name: "Copy v2 file"
+     copy:   
+      src: ./templates/v2_key
+      dest: /var/www/miq/vmdb/certs
+      owner: root
+      group: root
+      mode: 0400
+   - name: "Start {{ evm_service_name }}"
+     service:
+     name={{ evm_service_name }}
+      state=started   

@@ -1,0 +1,27 @@
+ - hosts: test
+   tasks:
+   - name: Mount Storage Devices
+     mount: src=/dev/mapper/{{ item }} name=/repo state=unmounted
+     with_items:
+     - VG--CFME-lv_repo
+   
+   - name: "Delete mount point"
+     file: path=/repo  state=absent
+
+   - name: "Deleting repo Logical Volume"
+     lvol: 
+       vg: VG-CFME
+       lv: lv_repo
+       state: absent
+      
+   - name: "Extending var Logical Volume"
+     lvol: 
+       vg: VG-CFME
+       lv: lv_var
+       size: 100%FREE
+ 
+   - name: "Extending /var filesystem"
+     filesystem:
+      fstype: xfs
+      resizefs: yes
+      dev: /dev/mapper/VG--CFME-lv_var

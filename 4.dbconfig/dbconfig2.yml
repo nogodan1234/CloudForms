@@ -1,0 +1,48 @@
+- hosts: ui
+
+  tasks:
+  - name: "Stop {{ evm_service_name }}"
+    service:
+     name: "{{ evm_service_name }}"
+     state: stopped
+
+  - name: Clean APPLIANCE_PG_DATA dir
+    file:
+      state: absent
+      state: directory
+      recurse: yes
+      path: "{{ APPLIANCE_PG_DATA }}/"
+
+  - name: Clean v2_key,database.yml
+    file:
+      state: absent
+      path: "{{ item }}"
+    with_items:
+       - /var/www/miq/vmdb/certs/v2_key
+       - /var/www/miq/vmdb/config/database.yml
+
+  - name: "Copy v2 file"
+    copy:   
+     src: ./templates/v2_key
+     dest: /var/www/miq/vmdb/certs
+     owner: root
+     group: root
+     mode: 0400
+
+  - name: "Database.yml file to remote"
+    copy:   
+     src: ./templates/database.yml
+     dest: /var/www/miq/vmdb/config/
+     owner: root
+     group: root
+     mode: 0400
+
+  - name: "Matching REGION info"
+    shell: 'vmdb; echo 1 > REGION'
+    args:
+     chdir: /var/www/miq/vmdb
+     
+  - name: "Start {{ evm_service_name }}"
+    service:
+     name: "{{ evm_service_name }}"
+     state: started

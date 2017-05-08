@@ -1,4 +1,4 @@
- - hosts: worker
+ - hosts: test
    tasks:
    - name: "Clean-up all repo"
      shell: "subscription-manager unsubscribe --all"

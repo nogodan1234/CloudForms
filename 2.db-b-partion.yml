@@ -1,0 +1,27 @@
+ #- hosts: db-b
+   tasks:
+   - name: "Create mount point"
+     file: path=/var/opt/rh/rh-postgresql95/lib/pgsql owner=postgres group=postgres mode=0775 state=directory
+     
+   - name: "Creating Volume Group"
+     lvg: 
+      vg: vg_pg
+      pvs: /dev/vdb
+      pesize: 32
+      
+   - name: "Creating Logical Volume"
+      lvol: 
+       vg: vg_pg
+       lv: lv_pg
+       size: 100%FREE
+       ignore_errors: yes
+ 
+   - name: "Creating filesystem"
+     filesystem:
+      fstype: xfs
+      dev: /dev/mapper/vg_pg-lv_pg
+       
+   - name: Mount Storage Devices
+     mount: src=/dev/mapper/{{ item }} name=/var/opt/rh/rh-postgresql95/lib/pgsql fstype=xfs opts="rw,noatime" state=mounted
+     with_items:
+     - vg_pg-lv_pg

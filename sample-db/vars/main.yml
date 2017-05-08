@@ -1,0 +1,11 @@
+# rubyrep variables
+rubyrep_trigger_file:     /var/www/miq/vmdb/tools/upgrade_purge_duplicate_rubyrep_triggers.rb
+rubyrep_trigger_template: upgrade_purge_duplicate_rubyrep_triggers.rb
+
+# service variables for database role
+evm_enabled:     true
+db_service_name: rh-postgresql95-postgresql
+db_external:     false
+
+# PostgreSQL upgrade script
+PostgreSQL_upgrade_script:     /usr/bin/miq_postgres_upgrade.sh

@@ -1,0 +1,5 @@
+- hosts: test
+
+- include: ./1.CFME_upgrade.yml
+- include: ./3.repo_to_var.yml
+- include: ./4.dbconfig/dbconfig2.yml

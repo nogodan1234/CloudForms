@@ -1,0 +1,14 @@
+vmdb_dir:           /var/www/miq/vmdb   # vmdb directory on remote server
+rails_env_file:     /root/rails_env     # rails environment file on remote server
+rails_env_template: templates/rails_env # rails environment template on ansible server
+evm_service_name:   evmserverd          # name of cloudforms service
+cfme_40_repo:       cf-me-5.5-for-rhel-7-rpms
+cfme_41_repo:       cf-me-5.6-for-rhel-7-rpms
+cfme_42_repo:       cf-me-5.7-for-rhel-7-rpms
+cfme_base_repos:
+  - rhel-server-rhscl-7-rpms
+  - rhel-7-server-rpms
+
+APPLIANCE_PG_DATA: /var/opt/rh/rh-postgresql95/lib/pgsql/data
+APPLIANCE_PG_PACKAGE_NAME: rh-postgresql95-postgresql-server
+APPLIANCE_PG_SERVICE: rh-postgresql95-postgresql
