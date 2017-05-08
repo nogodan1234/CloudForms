@@ -9,6 +9,9 @@ cfme_base_repos:
   - rhel-server-rhscl-7-rpms
   - rhel-7-server-rpms
 
+vmware_driver:
+  VMware-vix-disklib-6.0.0-2498720.x86_64.tar.gz
+
 APPLIANCE_PG_DATA: /var/opt/rh/rh-postgresql95/lib/pgsql/data
 APPLIANCE_PG_PACKAGE_NAME: rh-postgresql95-postgresql-server
 APPLIANCE_PG_SERVICE: rh-postgresql95-postgresql

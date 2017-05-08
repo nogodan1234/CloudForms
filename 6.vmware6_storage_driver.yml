@@ -1,0 +1,40 @@
+ - hosts: STD
+   tasks:
+   - name: "scp driver file to /tmp dir"
+     copy:   
+      src: ./files/{{ vmware_driver }}
+      dest: /tmp
+      owner: root
+      group: root
+      mode: 0400
+
+   - unarchive:
+      src: /tmp/{{ vmware_driver }}
+      dest: /tmp
+      copy: no
+
+   - name: "Create /usr/lib/vmware-vix-disklib dir"
+     file: path=/usr/lib/vmware-vix-disklib owner=root group=root mode=0644 state=directory
+
+   - name: "Copy files from /tmp to /usr/lib/vmware-vix-disklib"
+     command: cp -rp /tmp/vmware-vix-disklib-distrib/{{item}} /usr/lib/vmware-vix-disklib
+     with_items :
+      ['bin64','lib64','include']
+
+   - name: "Create Symlink"
+     file:
+      src: /usr/lib/vmware-vix-disklib/lib64/{{item}}
+      dest: /usr/lib/{{item}}
+      state: link
+     with_items :
+      ['libvixDiskLib.so','libvixDiskLib.so.6']
+      
+   - name: "Load new lib module"
+     shell: "ldconfig"
+     shell: "ldconfig -p | grep vix"
+
+   - name: Restart server
+     shell: "/sbin/shutdown -r +1"
+     async: 0
+     poll: 0
+     ignore_errors: true
