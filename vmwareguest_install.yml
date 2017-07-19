@@ -67,6 +67,7 @@
         status_code: 200
       register: output
     - debug: var=output
+    
     - name: set the task href
       set_fact:
         task_url: "{{ output.json.task_href}}"
